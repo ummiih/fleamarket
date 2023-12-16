@@ -6,10 +6,10 @@ import NavigationItem from "@/components/NavigationItem";
 import Image from "next/image";
 
 interface NavigationProps {
-
+    children: React.ReactNode;
 }
 
-const Navigation: React.FC<NavigationProps> = ({}) => {
+const Navigation: React.FC<NavigationProps> = ({children}) => {
     const pathname = usePathname();
 
     const routes = useMemo(
@@ -18,7 +18,6 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                 label: "당근",
                 href: "/",
                 active: true
-
             },
             {
                 label: "중고거래",
@@ -52,7 +51,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
 
     return (
         <div>
-            <div className="w-full h-[60px]">
+            <div className="w-full h-[60px] flex">
                 <div className={"flex gap-x-8 p-4 mx-20"}>
 
                     {routes.map((route) => (
@@ -60,6 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({}) => {
                     ))}
                 </div>
             </div>
+            <main className="h-full flex-1 overflow-y-auto py-2">{children}</main>
         </div>
     )
 }

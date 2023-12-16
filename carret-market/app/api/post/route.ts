@@ -1,10 +1,21 @@
 import { db } from "@/app/lib/db";
 import {NextRequest} from "next/server";
+import {useParams} from "next/navigation";
 
-//데이터 가져올 때
-export async function GET(req: NextRequest){
-    const data = await db.board.findMany({})
-    return Response.json(data)
+// //데이터 가져올 때
+// export async function GET(req: NextRequest){
+//     const data = await db.board.findMany({})
+//     return Response.json(data)
+// }
+
+export async function GET(req: NextRequest) {
+    const data = await db.board.findFirst({
+        where: {
+            id: parseInt(req.nextUrl.searchParams.get("id") as string),
+        },
+    });
+
+    return Response.json(data);
 }
 
 // //데이터 보낼 때

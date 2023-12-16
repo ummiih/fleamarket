@@ -16,3 +16,18 @@ model User {
   email String @unique
   name String?
 }
+
+model Board {
+  id Int @id@default(autoincrement())
+  title String
+  userName String
+  userAddress String
+  userTemperature Float
+  ImageUrl String
+  content String?
+  price Int
+  createdAt DateTime
+  interest Int
+  views Int
+  category String
+}

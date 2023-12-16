@@ -15,7 +15,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
     const routes = useMemo(
         () => [
             {
-                label: "당근",
+                label: "강황",
                 href: "/",
                 active: true
             },

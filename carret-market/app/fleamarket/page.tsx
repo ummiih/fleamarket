@@ -8,13 +8,14 @@ import Article from "@/components/Article";
 import Header from "@/components/Header";
 import {readAllFleamarket} from "@/app/api/fleamarket";
 import WriteButton from "@/components/WriteButton";
+import Modal from "@/components/Modal";
 
 
 const Fleamarket = () => {
     const [posts, setPosts] = useState<object>({"result":{"content":[]}});
 
     const getFleamarketData = async () => {
-        const res = await axios.get("http://192.168.1.2:8080/api/v1/trade-posts")
+        const res = await axios.get("http://112.186.245.109:8080/api/v1/trade-posts")
         setPosts(res.data)
     }
 
@@ -29,6 +30,7 @@ const Fleamarket = () => {
     return (
         <div>
             <Header></Header>
+            <Modal></Modal>
             <div className={"h-14"}/>
             {/*아이템 list*/}
             <div className={"flex justify-center"}>
@@ -45,7 +47,7 @@ const Fleamarket = () => {
                 </div>
             </div>
             {/*글쓰기*/}
-            <WriteButton isOpen={true}/>
+
         </div>
 
     )

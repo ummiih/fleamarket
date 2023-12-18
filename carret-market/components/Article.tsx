@@ -29,11 +29,13 @@ const Article: React.FC<ArticleProps> = ({
     return (
         <div className={"hover:scale-105 transition"} onClick={onClick}>
             <div className={"group cursor-pointer"}>
-                <Image src={mainImageUrl}
-                       width={220}
-                       height={220}
-                       className={"rounded-lg"}
-                       alt={title} />
+                <div className={"rounded-xl relative w-[220px] h-[220px] bg-black overflow-hidden"}>
+                <Image
+                    src={mainImageUrl}
+                    alt={title}
+                    className={"object-cover"}
+                    fill/>
+                </div>
                 <div className={"flex flex-col"}>
                     <span className={"font-normal mt-3"}>{title}</span>
                     <span className={"text-[16px] font-semibold"}>{price}원</span>

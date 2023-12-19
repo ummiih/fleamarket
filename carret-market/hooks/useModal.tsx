@@ -1,10 +1,10 @@
 import {useState} from "react";
-interface ModalState {
+interface ModalProps {
     isShowing: boolean;
     toggle: () => void;
 }
 
-const useModal = (): ModalState => {
+const useModal = (): ModalProps => {
     const [isShowing, setIsShowing] = useState(false);
 
     const toggle = () => setIsShowing((prev) => !prev);

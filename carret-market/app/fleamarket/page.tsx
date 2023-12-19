@@ -1,6 +1,6 @@
 "use client"
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import axios from "axios";
 
@@ -13,7 +13,7 @@ import Modal from "@/components/Modal";
 
 const Fleamarket = () => {
     const [posts, setPosts] = useState<object>({"result":{"content":[]}});
-
+    const [open, setOpen] = useState<boolean>(false)
     const getFleamarketData = async () => {
         const res = await axios.get("http://112.186.245.109:8080/api/v1/trade-posts")
         setPosts(res.data)
@@ -28,9 +28,11 @@ const Fleamarket = () => {
     },[])
 
     return (
-        <div>
+        <div className={"relative"}>
+            {
+                open ? (<Modal isShowing={open}></Modal>) : (<div></div>)
+            }
             <Header></Header>
-            <Modal></Modal>
             <div className={"h-14"}/>
             {/*아이템 list*/}
             <div className={"flex justify-center"}>
@@ -42,11 +44,18 @@ const Fleamarket = () => {
                     {/*{console.log(posts.result.content)}*/}
 
                     {
-                        Object.entries(posts.result.content).map(([index,post]) => (<Article {...post}></Article>))
+                        Object
+                            .entries(posts.result.content)
+                            .map(([index, post]) => (<Article {...post}></Article>))
                     }
                 </div>
             </div>
             {/*글쓰기*/}
+            <div className={"relative"}>
+                <div className={"fixed bottom-0 right-0 m-10 hover:scale-110 transition"}>
+                    <WriteButton isShowing={open} onChange={() => setOpen(!open)}/>
+                </div>
+            </div>
 
         </div>
 

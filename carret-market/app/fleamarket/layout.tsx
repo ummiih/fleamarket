@@ -1,14 +1,15 @@
-import React from "react";
+"use client"
+
+import React, {useState} from "react";
 import WriteButton from "@/components/WriteButton";
 
 
 export default function Layout({ children }: React.PropsWithChildren) {
+    const [open, setOpen] = useState<boolean>(false)
     return (
         <>
         <div>{children}</div>
-            <div className={"relative"}>
-                <div className={"fixed bottom-0 right-0 m-10 hover:scale-110 transition"}><WriteButton isOpen={true}/></div>
-            </div>
+
         </>
     );
 }

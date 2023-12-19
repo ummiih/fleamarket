@@ -1,16 +1,17 @@
 "use client"
 
-import { FiPlus } from "react-icons/fi";
 import {useState} from "react";
-import {useRecoilState} from "recoil";
-import {modalState} from "@/app/recoil/fleamarket/atom";
+import { FiPlus } from "react-icons/fi";
+import useModal from "@/hooks/useModal";
+
 interface WriteButtonProps {
-    isOpen: boolean;
+    isShowing: boolean;
+    onChange: () => void;
 }
-const WriteButton:React.FC<WriteButtonProps> = ({isOpen}) => {
+const WriteButton:React.FC<WriteButtonProps> = ({isShowing, onChange}) => {
 
         return(
-            <button className={"bg-[#FE6F0F] p-3 rounded-full"}>
+            <button className={"bg-[#FE6F0F] p-3 rounded-full"} onClick={onChange}>
                 <FiPlus size={50} className={"text-white"}/>
             </button>
         )

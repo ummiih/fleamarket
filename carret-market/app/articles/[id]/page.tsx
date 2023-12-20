@@ -28,26 +28,26 @@ const ArticleDetail = () => {
     },[])
 
     return (
-        // <div>
-        //     <div className={"h-[30px]"}/>
-        //     <div className={"flex justify-center"}>
-        //         <div className={"relative w-[700px] h-[500px] rounded-lg"}>
-        //             <Image src={posts.ImageUrl} fill className={"object-cover"}></Image>
-        //         </div>
-        //     </div>
-        //     <Separator/>
-        //     <div className={"px-72"}>
-        //         <div>{posts.userName}</div>
-        //         <div>{posts.userAddress}</div>
-        //         <div>{posts.category}</div>
-        //
-        //         <div>{posts.title}</div>
-        //         <div>{posts.content}</div>
-        //         <div>관심 {posts.interest}</div>
-        //         <div>조회수 {posts.views}</div>
-        //     </div>
-        //     <Separator/>
-        // </div>
+        <div>
+            <div className={"h-[30px]"}/>
+            <div className={"flex justify-center"}>
+                <div className={"relative w-[700px] h-[500px] rounded-lg"}>
+                    <Image src={posts.ImageUrl} fill className={"object-cover"}></Image>
+                </div>
+            </div>
+            <Separator/>
+            <div className={"px-72"}>
+                <div>{posts.userName}</div>
+                <div>{posts.userAddress}</div>
+                <div>{posts.category}</div>
+
+                <div>{posts.title}</div>
+                <div>{posts.content}</div>
+                <div>관심 {posts.interest}</div>
+                <div>조회수 {posts.views}</div>
+            </div>
+            <Separator/>
+        </div>
     )
 }
 export default ArticleDetail;

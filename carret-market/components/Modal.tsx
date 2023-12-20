@@ -1,25 +1,42 @@
 "use client"
 
 import axios from "axios";
+import {useEffect, useRef, useState} from "react";
 
 
 interface ModalProps {
     isShowing: boolean;
 }
 const Modal:React.FC<ModalProps> = ({isShowing}) => {
-    // function setThumbnail(event) {
-    //     for (var image of event.target.files) {
-    //         var reader = new FileReader();
-    //
-    //         reader.onload = function(event) {
-    //             var img = document.createElement("img");
-    //             img.setAttribute("src", event.target.result);
-    //             document.querySelector("div#image_container").appendChild(img);
-    //         };
-    //
-    //         reader.readAsDataURL(image);
-    // }
+    const [imgFiles, setImgFiles] = useState<string[]>([]);
+    const imgRef = useRef<HTMLInputElement>(null);
+    const [fileList, setFileList] = useState<File[]>([]);
 
+    //이미지 업로드 input의 onChange
+    const saveImgFile = async () => {
+        const files = imgRef.current.files
+        const copyImgFile = [...imgFiles]
+        const copyFileList = [...fileList]
+
+        for (let i = 0; i < files.length; i++){
+            let reader = new FileReader();
+            reader.readAsDataURL(files[i])
+            reader.onloadend = () => {
+                copyImgFile.push(reader.result)
+                setImgFiles(copyImgFile)
+            }
+        }
+
+        for (let i = 0; i< files.length;i++){
+            copyFileList.push(files[i])
+            setFileList(copyFileList)
+        }
+    }
+
+    useEffect(() => {
+        console.log(imgFiles)
+        console.log(fileList)
+    }, [imgFiles, fileList]);
 
     return (
         <>
@@ -30,7 +47,7 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                 {/*데이터 전송*/}
                 <form
                     onSubmit={(e: any) => {
-                        e.preventDefault();
+                        e.preventDefault()
                         const formData = new FormData();
                         var json = {
                             title: e.target.title.value,
@@ -40,15 +57,17 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                         formData.append('request', new Blob([JSON.stringify(json)], {
                             type: "application/json"
                         }))
-                        const fileList: File[] = []; // 업로드한 파일들을 저장하는 배열
 
-                        const uploadFiles = Array.prototype.slice.call(e.currentTarget.image.files); // 파일선택창에서 선택한 파일들
 
-                        uploadFiles.forEach((uploadFile) => {
-                            fileList.push(uploadFile);
-                        });
+                        // const uploadFiles = Array.prototype.slice.call(e.currentTarget.image.files); // 파일선택창에서 선택한 파일들
+                        //
+                        //
+                        // uploadFiles.forEach((uploadFile) => {
+                        //     setFileList([...fileList, uploadFile])
+                        // });
+                        //
+                        // console.log(fileList)
 
-                        console.log(fileList)
                         fileList.forEach((file) => {
                             formData.append("files", file);
                         });
@@ -67,7 +86,7 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                             //TODO: toast로 실패 보내기
                         })
                     }}>
-                    <div className={"grid "}>
+                    <div className={"grid"}>
                     <input className={"border"}
                            placeholder={"제목"}
                            id="title"
@@ -87,12 +106,17 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                            accept={"image/*"}
                            id="image"
                            name="image"
+                           ref={imgRef}
+                           onChange={saveImgFile}
                            multiple
                            required
                         ></input>
                     </div>
                     <button type={"submit"}>전송</button>
                 </form>
+                {
+                    imgFiles.map((img,i) => <img key={i} src={img} alt={img} className={"w-[50px] h-[50px]"}></img>)
+                }
             </div>
             </div>
             </div>

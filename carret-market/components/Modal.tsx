@@ -67,6 +67,7 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                             //TODO: toast로 실패 보내기
                         })
                     }}>
+                    <div className={"grid "}>
                     <input className={"border"}
                            placeholder={"제목"}
                            id="title"
@@ -89,6 +90,7 @@ const Modal:React.FC<ModalProps> = ({isShowing}) => {
                            multiple
                            required
                         ></input>
+                    </div>
                     <button type={"submit"}>전송</button>
                 </form>
             </div>

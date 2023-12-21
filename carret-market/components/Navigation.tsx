@@ -4,6 +4,7 @@ import {usePathname} from "next/navigation";
 import {useMemo} from "react";
 import NavigationItem from "@/components/NavigationItem";
 import Image from "next/image";
+import LoginButton from "@/components/LoginButton";
 
 interface NavigationProps {
     children: React.ReactNode;
@@ -58,6 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                         <NavigationItem key={route.label} {...route}></NavigationItem>
                     ))}
                 </div>
+                <LoginButton></LoginButton>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">{children}</main>
         </div>

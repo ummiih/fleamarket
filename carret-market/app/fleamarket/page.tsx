@@ -2,30 +2,68 @@
 
 import React, {useEffect, useState} from "react";
 
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
 
 import Article from "@/components/Article";
 import Header from "@/components/Header";
-import {readAllFleamarket} from "@/app/api/fleamarket";
 import WriteButton from "@/components/WriteButton";
 import Modal from "@/components/Modal";
+import {useRouter} from "next/navigation";
 
 
 const Fleamarket = () => {
     const [posts, setPosts] = useState<object>({"result":{"content":[]}});
     const [open, setOpen] = useState<boolean>(false)
-    const getFleamarketData = async () => {
-        const res = await axios.get("http://112.186.245.109:8080/api/v1/trade-posts")
-        setPosts(res.data)
-    }
-
-    useEffect(()=>{
-        getFleamarketData();
-    },[])
+    const globalURL = "http://112.186.245.109:8080/api/v1/trade-posts"
+    const router = useRouter()
 
     useEffect(() => {
-        // console.log(posts)
-    },[])
+        const refreshAPI = axios.create({
+            baseURL: globalURL,
+            headers: {"Content-type": "application/json"},
+        });
+        const interceptor = axios.interceptors.response.use(
+            function (response) {
+                return response;
+            },
+            async function (error) {
+                const originalConfig = error.config;
+                const msg = error.response.data.message;
+                const status = error.response.status;
+
+                if (status == 401) {
+                    if (msg == "access token expired") {
+                        await axios({
+                            url: globalURL,
+                            method: "GET",
+                            headers: {
+                                'access-token': localStorage.getItem("accessToken"),
+                                'refresh-token': localStorage.getItem("refreshToken")
+                            },
+                        })
+                            .then((res) => {
+                                localStorage.setItem("accessToken", res.headers.get("Access-Token"));
+                                originalConfig.headers["Authorization"] = localStorage.getItem("accessToken")
+                                return refreshAPI(originalConfig);
+                            })
+                            .then((res) => {
+                                window.location.reload()
+                            });
+                    } else if (msg == "refresh token expired") {
+                        localStorage.clear();
+                        router.push("/sign-up")
+                        window.alert("토큰이 만료되어 자동으로 로그아웃 되었습니다.")
+                    }
+                } else if (status == 400 || status == 404 || status == 409) {
+                    window.alert(msg);
+                }
+                return Promise.reject(error)
+            }
+        );
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
+    }, []);
 
     return (
         <div className={"relative"}>
@@ -46,7 +84,7 @@ const Fleamarket = () => {
                     {
                         Object
                             .entries(posts.result.content)
-                            .map(([index, post]) => (<Article {...post}></Article>))
+                            .map(([index, post]) => (<React.Fragment key={index}><Article {...post}></Article></React.Fragment>))
                     }
                 </div>
             </div>

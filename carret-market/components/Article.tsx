@@ -4,6 +4,7 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 
 interface ArticleProps {
+    postId: number;
     title : string;
     seller: seller;
     price: number;
@@ -18,12 +19,13 @@ interface seller {
 }
 
 const Article: React.FC<ArticleProps> = ({
-                                             title, price,
+                                             postId, title, price,
                                              mainImageUrl,likeCount,
                                              views, seller
 }) => {
     const router = useRouter()
     const onClick = () => {
+        router.push("/articles/" + postId)
     }
 
     return (
@@ -32,7 +34,7 @@ const Article: React.FC<ArticleProps> = ({
                 <div className={"rounded-xl relative w-[220px] h-[220px] bg-black overflow-hidden"}>
                 <Image
                     src={mainImageUrl}
-                    alt={title}
+                    alt={postId}
                     className={"object-cover"}
                     fill/>
                 </div>

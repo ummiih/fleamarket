@@ -7,9 +7,11 @@ import WriteButton from "@/components/WriteButton";
 import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
 import {sendRequest} from "@/hooks/funcs";
+import {useRecoilState} from "recoil";
+import { allFleaMarketData } from "@/app/recoil/atom";
 
 const Fleamarket = () => {
-    const [posts, setPosts] = useState<object>({ "result": { "content": [] } });
+    const [posts, setPosts] = useRecoilState(allFleaMarketData)
     const [open, setOpen] = useState<boolean>(false);
     const router = useRouter();
 

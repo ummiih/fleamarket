@@ -1,10 +1,12 @@
 "use client"
 
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useMemo} from "react";
 import NavigationItem from "@/components/NavigationItem";
 import Image from "next/image";
 import LoginButton from "@/components/LoginButton";
+import SearchInput from "@/components/SearchInput";
+import Button from "@/components/Button";
 
 interface NavigationProps {
     children: React.ReactNode;
@@ -12,6 +14,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({children}) => {
     const pathname = usePathname();
+    const router = useRouter()
 
     const routes = useMemo(
         () => [
@@ -49,17 +52,25 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
 
         ], [pathname]
     )
+    const searchOnClick = ()=> {
+        router.push("/search")
+    }
 
     return (
         <div>
-            <div className="w-full h-[60px] flex">
-                <div className={"flex gap-x-8 p-4 mx-20"}>
+            <div className="w-full h-[60px] ">
+                <div className={"flex justify-between items-center mx-20"}>
+                    <div className={"flex gap-x-8 p-4"}>
 
-                    {routes.map((route) => (
-                        <NavigationItem key={route.label} {...route}></NavigationItem>
-                    ))}
+                        {routes.map((route) => (
+                            <NavigationItem key={route.label} {...route}></NavigationItem>
+                        ))}
+                    </div>
+                    <div className={"flex gap-x-4 items-center"}>
+                    <Button onClick={searchOnClick}>검색하기</Button>
+                    <LoginButton></LoginButton>
+                    </div>
                 </div>
-                <LoginButton></LoginButton>
             </div>
             <main className="h-full flex-1 overflow-y-auto py-2">{children}</main>
         </div>

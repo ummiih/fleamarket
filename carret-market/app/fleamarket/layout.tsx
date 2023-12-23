@@ -8,8 +8,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     const [open, setOpen] = useState<boolean>(false)
     return (
         <>
-        <div>{children}</div>
-
+                <div>{children}</div>
         </>
     );
 }

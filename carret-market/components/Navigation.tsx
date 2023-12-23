@@ -10,6 +10,7 @@ import Button from "@/components/Button";
 import {useRecoilState} from "recoil";
 import {modalState} from "@/app/recoil/atom";
 import Modal from "@/components/Modal";
+import {IoSearch} from "react-icons/io5";
 
 interface NavigationProps {
     children: React.ReactNode;
@@ -63,7 +64,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
     return (
         <div>
             {open ? ( <Modal isShowing={open}></Modal>) : <div></div>}
-            <div className="w-full h-[60px] ">
+            <div className="w-full h-[60px] shadow-lg shadow-neutral-100">
                 <div className={"flex justify-between items-center mx-20"}>
                     <div className={"flex gap-x-8 p-4"}>
 
@@ -72,7 +73,8 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                         ))}
                     </div>
                     <div className={"flex gap-x-4 items-center"}>
-                    <Button onClick={searchOnClick}>검색하기</Button>
+                    <Button onClick={searchOnClick} className={"flex items-center gap-x-1"}>
+                        <IoSearch size={20} />검색하기</Button>
                     <LoginButton></LoginButton>
                     </div>
                 </div>

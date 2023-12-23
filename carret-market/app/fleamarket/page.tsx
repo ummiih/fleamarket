@@ -51,7 +51,9 @@ const Fleamarket = () => {
             </div>
             <div className={"h-10"}/>
             <div className={"flex justify-center "}>
-                {(!posts || !posts.content || posts.content.length === 0) ? (<div>로딩중</div>) : (
+                {(!posts || !posts.content || posts.content.length === 0) ?
+                    (<div className={"text-xl font-semibold text-neutral-400"}>게시글이 없습니다.</div>)
+                    : (
                     <ArticleContent posts={posts}></ArticleContent>)}
 
             </div>

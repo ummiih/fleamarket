@@ -4,6 +4,7 @@ import Input from "@/components/Input";
 import {useRouter} from "next/navigation";
 import qs from "query-string";
 import useDebounce from "@/hooks/useDebounce";
+import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 
 const SearchInput = () => {
@@ -27,7 +28,8 @@ const SearchInput = () => {
 
     return (
         <div>
-            <Input placeholder={"검색어를 입력하시오"}
+            <Input className={"p-3 bg-neutral-100 w-full rounded-full text-lg"}
+                placeholder={"검색어를 입력하시오"}
                    value={value}
                    onChange={(e)=>setValue(e.target.value)}>
             </Input>

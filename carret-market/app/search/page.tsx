@@ -6,6 +6,7 @@ import {useSearchParams} from "next/navigation";
 import React, {useEffect, useRef, useState} from "react";
 import {sendRequest} from "@/hooks/funcs";
 import getSearchData from "@/actions/getSearchData";
+import {IoSearch} from "react-icons/io5";
 
 const Search = () => {
     const parameter = useSearchParams()
@@ -41,12 +42,34 @@ const Search = () => {
     }, [parameter]);
 
     return (
-        <div>
-            <h1>검색하기</h1>
-            <SearchInput></SearchInput>
-            {(!data || !data.content || data.content.length === 0) ? (<div>검색결과 없음</div>):(<SearchContent data={data}></SearchContent>)}
+        <div className={""}>
+            <div className={"h-14"}/>
+            <div className={"flex justify-center"}>
+                <div className={"text-3xl font-bold items-center"}>검색</div>
+
+            </div>
+            <div className={"mx-80"}>
+                <div className={"h-5"}/>
+                <SearchInput></SearchInput>
+            </div>
+            <div className={"mx-64"}>
+
+                <div className={"h-10"}/>
+                <div className={"flex justify-center items-center"}>
+                    {(!data || !data.content || data.content.length === 0) ? (
+                        <div className={"grid items-center justify-center gap-y-2"}>
+                            <IoSearch className="mt-24 text-neutral-400 ml-14" size={70}/>
+                            <div className={"text-2xl font-semibold text-neutral-400"}>
+                                검색결과가 없습니다.
+                            </div>
+                        </div>
+
+                    ) : (
+                        <SearchContent data={data}></SearchContent>
+                    )}
+                </div>
+            </div>
         </div>
     )
-
 }
 export default Search

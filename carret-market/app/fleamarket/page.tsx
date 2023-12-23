@@ -9,23 +9,28 @@ import { useRouter } from "next/navigation";
 import {sendRequest} from "@/hooks/funcs";
 import {useRecoilState} from "recoil";
 import { allFleaMarketData } from "@/app/recoil/atom";
+import ArticleContent from "@/components/ArticleContent";
+import SearchContent from "@/app/search/components/SearchContent";
 
 const Fleamarket = () => {
-    const [posts, setPosts] = useRecoilState(allFleaMarketData)
+    const [posts, setPosts] = useState( { "content": [] })
     const [open, setOpen] = useState<boolean>(false);
     const router = useRouter();
-
+    let test;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // 액세스 토큰을 헤더에 담아 요청 보내기
                 const response = await sendRequest({
+                    headers: {
+                        'Access-Token': localStorage.getItem('accessToken')
+                    },
                     method: 'GET',
                     url: '/api/v1/trade-posts',
                 });
-                setPosts(response.data)
-
+                setPosts(response.data.result)
+                test = response
                 // 성공적인 응답 처리
                 console.log('데이터:', response.data);
             } catch (error) {
@@ -47,13 +52,8 @@ const Fleamarket = () => {
             </div>
             <div className={"h-10"} />
             <div className={"flex justify-center "}>
-                <div className={"grid grid-cols-3 gap-12"}>
-                    {Object.entries(posts.result.content).map(([index, post]) => (
-                        <React.Fragment key={index}>
-                            <Article {...post}></Article>
-                        </React.Fragment>
-                    ))}
-                </div>
+                {(!posts || !posts.content || posts.content.length === 0) ? (<div>로딩중</div>):( <ArticleContent posts={posts}></ArticleContent>)}
+
             </div>
             {/*글쓰기*/}
             <div className={"relative"}>

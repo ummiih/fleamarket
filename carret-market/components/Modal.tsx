@@ -46,6 +46,9 @@ const Modal: React.FC<ModalProps> = ({isShowing}) => {
         try {
             // 액세스 토큰을 헤더에 담아 요청 보내기
             const response = await sendRequest({
+                headers: {
+                    'Access-Token': localStorage.getItem('accessToken')
+                },
                 method: 'POST',
                 data: formData,
                 url: '/api/v1/trade-posts',

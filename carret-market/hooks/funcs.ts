@@ -2,17 +2,14 @@ import axios from "axios";
 import {headers} from "next/headers";
 
 const api = axios.create({
-
-    baseURL: `http://112.186.245.109:8080/`,
-    headers: {
-        'Access-Token': localStorage.getItem('accessToken')
-    }
+    baseURL: `http://112.186.245.109:8080/`
 });
 
 // 토큰 관리를 위한 함수
 const setAuthHeader = (token) => {
     if (token) {
         api.defaults.headers['access-token'] = `${token}`;
+        localStorage.removeItem("accessToken")
     } else {
         delete api.defaults.headers['access-token'];
     }
@@ -22,6 +19,7 @@ const setAuthHeader = (token) => {
 const saveTokensToLocalStorage = (accessToken, refreshToken) => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+    console.log("새로운 리프토큰",localStorage.getItem("refreshToken"))
 };
 
 const getTokensFromLocalStorage = () => {
@@ -33,6 +31,7 @@ const getTokensFromLocalStorage = () => {
 // API 요청을 보내는 함수
 const sendRequest = async (config) => {
     try {
+        console.log('In send Request' + localStorage.getItem('accessToken'))
         return await api(config);
     } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -41,7 +40,7 @@ const sendRequest = async (config) => {
             if (refreshToken) {
                 try {
                     const response = await api.post(
-                        'api/v1/trade-posts',
+                        config.url,
                         {}, // 여기에 요청 바디 데이터를 넣어줘야 함
                         {
                             headers: {
@@ -49,24 +48,34 @@ const sendRequest = async (config) => {
                             }
                         }
                     );
+                    const newAccessToken = response.headers.get("access-token")
+                    const newRefreshToken = response.headers.get("refresh-token")
 
-                    const newAccessToken = response.headers['access-token'];
-                    const newRefreshToken = response.headers['refresh-token'];
 
+                    localStorage.removeItem("refreshToken")
+                    localStorage.removeItem("accessToken")
                     // 갱신된 액세스 토큰을 헤더에 설정
                     setAuthHeader(newAccessToken);
-
-                    console.log(newAccessToken)
-                    console.log(newRefreshToken)
 
                     // 갱신된 토큰을 로컬 스토리지에 저장
                     saveTokensToLocalStorage(newAccessToken, newRefreshToken);
 
+
+
                     // 이전 요청 재시도
-                    return await api(config);
+                    return await api({
+                        headers: {
+                            'Access-Token': newAccessToken
+                        },
+                        method: config.method,
+                        data: config.data,
+                        url: config.url
+                    });
                 } catch (refreshError) {
                     // 리프레시 토큰으로의 갱신에 실패하면 로그인 페이지로 리다이렉트 또는 다른 처리 수행
-                    console.error('토큰 갱신에 실패했습니다.', refreshError);
+                    console.error('토큰 갱신에 실패했습니다..', refreshError);
+                    console.log(localStorage.getItem("accessToken"))
+                    console.log(localStorage.getItem("refreshToken"))
                     // 예: 로그인 페이지로 리다이렉트
                 }
             }

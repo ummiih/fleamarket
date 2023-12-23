@@ -1,22 +1,30 @@
 "use client"
-import axios from "axios";
-import { useParams } from 'next/navigation';
 import Image from "next/image";
-import {Separator} from "@/components/ui/separator";
-import {useRecoilState} from "recoil";
-import {oneFleaMarketData} from "@/app/recoil/atom";
+import { useParams } from 'next/navigation';
 import {useEffect, useState} from "react";
+import {useRecoilState} from "recoil";
+
+
+import {oneFleaMarketData} from "@/app/recoil/atom";
 import {sendRequest} from "@/hooks/funcs";
+
+import {Separator} from "@/components/ui/separator";
+
+import LikeButton from "@/components/LikeButton";
 
 const ArticleDetail = () => {
     const params = useParams();
     const [post, setPost] = useRecoilState(oneFleaMarketData)
     let [count, setCount] = useState(0)
 
+
     const fetchData = async () => {
         try {
             // 액세스 토큰을 헤더에 담아 요청 보내기
             const response = await sendRequest({
+                headers: {
+                    'Access-Token': localStorage.getItem('accessToken')
+                },
                 method: 'GET',
                 url: '/api/v1/trade-posts/'+params.id,
             });
@@ -63,10 +71,8 @@ const ArticleDetail = () => {
                     {
                         Object.entries(post.result.imageUrls).map(([index, img]) => {
                                 return (
-
                                         <Image src={`${img}`} width={384} height={384} className={""}
                                                alt={index}></Image>
-
                                 )
                             }
                         )
@@ -78,6 +84,7 @@ const ArticleDetail = () => {
             </div>
             <Separator/>
             <div className={"px-72"}>
+                <LikeButton param={params.id} ></LikeButton>
                 <div>이름 : {post.result.seller.name}</div>
                 <div>주소 : {post.result.seller.address}</div>
                 <div>온도: {post.result.seller.temperature}</div>

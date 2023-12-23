@@ -17,6 +17,9 @@ const Search = () => {
             try {
                 // 액세스 토큰을 헤더에 담아 요청 보내기
                 const response = await sendRequest({
+                    headers: {
+                        'Access-Token': localStorage.getItem('accessToken')
+                    },
                     method: 'GET',
                     params: { keyword : parameter.get("keyword") },
                     url: '/api/v1/trade-posts',

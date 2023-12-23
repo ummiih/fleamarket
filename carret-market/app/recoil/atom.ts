@@ -23,3 +23,9 @@ export const lng = atom({
     key: "lng",
     default: ""
 })
+
+//글쓰기 모달창
+export const modalState = atom({
+    key: "modalState",
+    default: false
+})

@@ -8,13 +8,13 @@ import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
 import {sendRequest} from "@/hooks/funcs";
 import {useRecoilState} from "recoil";
-import { allFleaMarketData } from "@/app/recoil/atom";
+import {allFleaMarketData, modalState} from "@/app/recoil/atom";
 import ArticleContent from "@/components/ArticleContent";
 import SearchContent from "@/app/search/components/SearchContent";
 
 const Fleamarket = () => {
     const [posts, setPosts] = useState( { "content": [] })
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useRecoilState(modalState)
     const router = useRouter();
     let test;
 
@@ -42,23 +42,23 @@ const Fleamarket = () => {
     }, []);
 
     return (
-        <div className={"relative"}>
-            {open ? <Modal isShowing={open}></Modal> : <div></div>}
+        <div className={""}>
             <Header></Header>
-            <div className={"h-14"} />
+            <div className={"h-14"}/>
             {/*아이템 list*/}
             <div className={"flex justify-center"}>
                 <div className={"text-[32px] font-semibold"}>중고거래 인기매물</div>
             </div>
-            <div className={"h-10"} />
+            <div className={"h-10"}/>
             <div className={"flex justify-center "}>
-                {(!posts || !posts.content || posts.content.length === 0) ? (<div>로딩중</div>):( <ArticleContent posts={posts}></ArticleContent>)}
+                {(!posts || !posts.content || posts.content.length === 0) ? (<div>로딩중</div>) : (
+                    <ArticleContent posts={posts}></ArticleContent>)}
 
             </div>
             {/*글쓰기*/}
             <div className={"relative"}>
                 <div className={"fixed bottom-0 right-0 m-10 hover:scale-110 transition"}>
-                    <WriteButton isShowing={open} onChange={() => setOpen(!open)} />
+                    <WriteButton isShowing={open} onChange={() => setOpen(!open)}/>
                 </div>
             </div>
         </div>

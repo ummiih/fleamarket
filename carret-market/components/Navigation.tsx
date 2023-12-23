@@ -1,12 +1,15 @@
 "use client"
 
 import {usePathname, useRouter} from "next/navigation";
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import NavigationItem from "@/components/NavigationItem";
 import Image from "next/image";
 import LoginButton from "@/components/LoginButton";
 import SearchInput from "@/components/SearchInput";
 import Button from "@/components/Button";
+import {useRecoilState} from "recoil";
+import {modalState} from "@/app/recoil/atom";
+import Modal from "@/components/Modal";
 
 interface NavigationProps {
     children: React.ReactNode;
@@ -15,6 +18,7 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({children}) => {
     const pathname = usePathname();
     const router = useRouter()
+    const [open, setOpen] = useRecoilState(modalState)
 
     const routes = useMemo(
         () => [
@@ -58,6 +62,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
 
     return (
         <div>
+            {open ? ( <Modal isShowing={open}></Modal>) : <div></div>}
             <div className="w-full h-[60px] ">
                 <div className={"flex justify-between items-center mx-20"}>
                     <div className={"flex gap-x-8 p-4"}>
@@ -72,7 +77,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                     </div>
                 </div>
             </div>
-            <main className="h-full flex-1 overflow-y-auto py-2">{children}</main>
+            <main className="">{children}</main>
         </div>
     )
 }

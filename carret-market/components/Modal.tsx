@@ -1,10 +1,15 @@
 "use client"
 
 import axios from "axios";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import usePostTokenRefresher from "@/hooks/usePostTokenRefresher";
 import {useRouter} from "next/navigation";
 import {sendRequest} from "@/hooks/funcs";
+
+import {IoClose} from "react-icons/io5";
+import {FiPlus} from "react-icons/fi";
+import {useRecoilState} from "recoil";
+import {modalState} from "@/app/recoil/atom";
 
 
 interface ModalProps {
@@ -16,14 +21,21 @@ const Modal: React.FC<ModalProps> = ({isShowing}) => {
     const imgRef = useRef<HTMLInputElement>(null);
     const [fileList, setFileList] = useState<File[]>([]);
     const router = useRouter();
-
+    const textRef = useRef();
     const globalURL = "http://112.186.245.109:8080/api/v1/trade-posts"
+    const [open, setOpen] = useRecoilState(modalState)
+
+    //textarea태그 자동 높이 조절
+    const handleResizeHeight = useCallback(() => {
+        textRef.current.style.height = textRef.current.scrollHeight + "px";
+    }, []);
 
     //이미지 업로드 input의 onChange
     const saveImgFile = async () => {
         const files = imgRef.current.files
         const copyImgFile = [...imgFiles]
         const copyFileList = [...fileList]
+
 
         // 이미지 미리 보기 코드
         for (let i = 0; i < files.length; i++) {
@@ -67,10 +79,18 @@ const Modal: React.FC<ModalProps> = ({isShowing}) => {
 
     return (
         <>
+
             {isShowing &&
-                <div className={"fixed z-20"}>
+                <div className={"absolute z-50 m-5"}>
                     <div className={"absolute mx-72"}>
-                        <div className={"w-[700px] h-[500px] border bg-white rounded-xl"}>
+                        <div className={"relative w-[700px] border bg-white rounded-xl "}>
+                            <div className={"flex m-8 gap-x-60"}>
+                                {/*닫기 버튼*/}
+                                <button onClick={() => setOpen(!open)}>
+                                    <IoClose size={30}/>
+                                </button>
+                                <div className={"text-2xl font-semibold"}>게시글 작성</div>
+                            </div>
                             {/*데이터 전송*/}
                             <form
                                 onSubmit={(e: any) => {
@@ -96,45 +116,70 @@ const Modal: React.FC<ModalProps> = ({isShowing}) => {
 
                                     fetchData(formData)
                                 }}>
-                                <div className={"grid"}>
-                                    <input className={"border"}
-                                           placeholder={"제목"}
-                                           id="title"
-                                           name="title"
-                                    ></input>
-                                    <input className={"border"}
-                                           placeholder={"게시글"}
-                                           id="content"
-                                           name="content"
-                                    ></input>
-                                    <input className={"border"}
-                                           placeholder={"가격"}
-                                           id="price"
-                                           name="price"
-                                    ></input>
-                                    <input type={"file"}
-                                           accept={"image/*"}
-                                           id="image"
-                                           name="image"
-                                           ref={imgRef}
-                                           onChange={saveImgFile}
-                                           multiple
-                                           required
-                                    ></input>
+                                <div className={"flex flex-col gap-y-5 mx-10 my-5"}>
+                                    <div className={"flex flex-col"}>
+                                        <label className={"text-lg font-semibold"}>제목</label>
+                                        <input className={"bg-neutral-100 rounded p-2"}
+                                               id="title"
+                                               name="title"
+                                        ></input>
+                                    </div>
+                                    <div className={"flex flex-col gap-y-1"}>
+                                        <label className={"text-lg font-semibold"}>내용</label>
+                                        <textarea className={"bg-neutral-100 rounded p-2 h-40"}
+                                                  ref={textRef}
+                                                  id="content"
+                                                  name="content"
+                                                  onInput={handleResizeHeight}
+                                        ></textarea>
+                                    </div>
+                                    <div className={"flex flex-col gap-y-1"}>
+                                        <label className={"text-lg font-semibold"}>가격</label>
+                                        <input className={"bg-neutral-100 rounded p-2"}
+                                               id="price"
+                                               name="price"
+                                        ></input>
+                                    </div>
+                                    <div className={"flex flex-col gap-y-1"}>
+                                        <span className={"text-lg font-semibold"}>파일 업로드</span>
+                                        <input type={"file"}
+                                               accept={"image/*"}
+                                               id="image"
+                                               name="image"
+                                               ref={imgRef}
+                                               onChange={saveImgFile}
+                                               multiple
+                                               required
+                                               style={{display: "none"}}
+                                        ></input>
+
+                                        <div className={"flex items-center mt-2"}>
+                                            <label id={"image"} htmlFor="image">
+                                                <FiPlus size={20}
+                                                        className={"text-white p-2 w-[40px] h-[40px] bg-black rounded-full cursor-pointer mr-2 hover:scale-105 transition hover:opacity-70"}/></label>
+
+                                            <div className={"flex gap-x-2 rounded-2xl items-center overflow-x-scroll"}>
+
+                                                {
+                                                    imgFiles.map((img, i) => <img key={i} src={img} alt={img}
+                                                                                  className={"w-[80px] h-[80px]"}></img>)
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type={"submit"}
+                                            className={"mt-10 bottom-0 right-10 left-10 p-2 bg-[#FE6F0F] text-xl text-white font-semibold rounded-full hover:opacity-80 transition"}>완료
+                                    </button>
                                 </div>
-                                <button type={"submit"}>전송</button>
                             </form>
-                            {
-                                imgFiles.map((img, i) => <img key={i} src={img} alt={img}
-                                                              className={"w-[50px] h-[50px]"}></img>)
-                            }
+
                         </div>
                     </div>
                 </div>
             }
         </>
 
-)
+    )
 
 }
 export default Modal

@@ -29,3 +29,17 @@ export const modalState = atom({
     key: "modalState",
     default: false
 })
+
+export const chatRoomId = atom({
+    key: "chatRoomId",
+    default: ""
+})
+export const chattingMessage = atom({
+    key: "chattingMessage",
+    default: []
+})
+
+export const userInfo = atom({
+    key: "userInfo",
+    default: {}
+})

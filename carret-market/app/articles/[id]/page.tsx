@@ -11,13 +11,14 @@ import {sendRequest} from "@/hooks/funcs";
 import {Separator} from "@/components/ui/separator";
 
 import LikeButton from "@/components/LikeButton";
+import ChattingButton from "@/components/ChattingButton";
 
 const ArticleDetail = () => {
     const params = useParams();
     const [post, setPost] = useRecoilState(oneFleaMarketData)
     let [count, setCount] = useState(0)
 
-
+    console.log(typeof params.id)
     const fetchData = async () => {
         try {
             // 액세스 토큰을 헤더에 담아 요청 보내기
@@ -53,9 +54,9 @@ const ArticleDetail = () => {
 
     }, [params.id, setPost]);
 
-    useEffect(() => {
-        console.log(count)
-    }, [count]);
+    // useEffect(() => {
+    //     // console.log(count)
+    // }, [count]);
 
     // post가 아직 업데이트되지 않았다면 로딩 상태 또는 데이터 존재 여부 확인
     if (!post || !post.result || Object.keys(post.result).length === 0) {
@@ -95,7 +96,7 @@ const ArticleDetail = () => {
                 <div>관심: {post.result.likeCount}</div>
                 <div>조회수: {post.result.views}</div>
             </div>
-            <Separator/>
+            <ChattingButton parameter={params}></ChattingButton>
         </div>
     )
 }

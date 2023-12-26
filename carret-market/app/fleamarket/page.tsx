@@ -11,6 +11,7 @@ import {useRecoilState} from "recoil";
 import {allFleaMarketData, modalState} from "@/app/recoil/atom";
 import ArticleContent from "@/components/ArticleContent";
 import SearchContent from "@/app/search/components/SearchContent";
+import ChattingButton from "@/components/ChattingButton";
 
 const Fleamarket = () => {
     const [posts, setPosts] = useState( { "content": [] })
@@ -59,7 +60,8 @@ const Fleamarket = () => {
             </div>
             {/*글쓰기*/}
             <div className={"relative"}>
-                <div className={"fixed bottom-0 right-0 m-10 hover:scale-110 transition"}>
+                <div className={"grid fixed bottom-0 right-0 m-10 gap-y-3"}>
+                    <ChattingButton></ChattingButton>
                     <WriteButton isShowing={open} onChange={() => setOpen(!open)}/>
                 </div>
             </div>

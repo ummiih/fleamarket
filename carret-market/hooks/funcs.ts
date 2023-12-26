@@ -1,5 +1,4 @@
 import axios from "axios";
-import {headers} from "next/headers";
 
 const api = axios.create({
     baseURL: `http://112.186.245.109:8080/`

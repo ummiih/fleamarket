@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import {RecoilRoot} from "recoil";
 import Script from "next/script";
 import Head from 'next/head';
+import {useParams} from "next/navigation";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,13 +20,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+    const parameter = useParams()
   return (
       <html lang="en">
       <body className={inter.className}>
       <RecoilRoot>
-          <Navigation>
-              {children}
-          </Navigation>
+          {/*{parameter == "chat"? (<Navigation />):(<Navigation>{children}</Navigation>)}*/}
+            <Navigation>
+                {children}
+            </Navigation>
       </RecoilRoot>
       </body>
       </html>

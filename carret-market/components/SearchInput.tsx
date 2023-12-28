@@ -29,7 +29,7 @@ const SearchInput = () => {
     return (
         <div>
             <Input className={"p-3 bg-neutral-100 w-full rounded-full text-lg"}
-                placeholder={"검색어를 입력하시오"}
+                placeholder={" 검색어를 입력하시오"}
                    value={value}
                    onChange={(e)=>setValue(e.target.value)}>
             </Input>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Receive from "@/app/chat/components/Receive";
 import Send from "@/app/chat/components/Send";
 import {useRecoilState} from "recoil";
@@ -10,7 +10,6 @@ interface ChatUiProps {
 const ChatUi:React.FC<ChatUiProps> = ({firstResult, user}) => {
     const [chatMessages, setChatMessages] = useRecoilState(chattingMessage)
     const userId = localStorage.getItem("userId")
-    console.log(userId)
 
     return(
         <div>

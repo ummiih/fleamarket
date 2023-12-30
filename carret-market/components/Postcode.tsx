@@ -35,7 +35,7 @@ const Postcode = () => {
         const res = await axios.get(`https://dapi.kakao.com/v2/local/search/address.json`,
             {
                 headers: {
-                    Authorization: "KakaoAK 03f5d6ffac2d0c2e9fe4a650c139daa9"
+                    Authorization: "KakaoAK "
                 },
                 params: {query: fullAddress}
             }

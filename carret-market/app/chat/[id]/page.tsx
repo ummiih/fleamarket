@@ -1,16 +1,18 @@
 "use client"
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import getChattingData from "@/actions/getChattingData";
 import {useParams} from "next/navigation";
 import { useRouter } from 'next/navigation'
 import SockJS from "sockjs-client";
 import {Client, CompatClient, Stomp} from "@stomp/stompjs";
 import {useRecoilState} from "recoil";
-import {chattingMessage, userInfo} from "@/app/recoil/atom";
+import {chattingMessage, userInfo, message, chatHistoryResult} from "@/app/recoil/atom";
 import {sendRequest} from "@/hooks/funcs";
 import Article from "@/components/Article";
 import ChatUi from "@/app/chat/components/ChatUi";
 import {Noticia_Text} from "next/dist/compiled/@next/font/dist/google";
+import Image from "next/image";
+import ChatHeader from "@/app/chat/components/ChatHeader";
 
 const Chat = () => {
     const roomId = useParams();
@@ -20,7 +22,8 @@ const Chat = () => {
     const userId = localStorage.getItem("userId")
     //채팅 메시지 저장코드
     const [chatMessages, setChatMessages] = useRecoilState(chattingMessage)
-    const [getChatMessages, setGetChatMessages] = useState({})
+    const [getChatMessages, setGetChatMessages] = useState()
+    const [oneChatMessage, setOneChatMessage] = useRecoilState(message)
     //연결 되어있는지 확인하는 state
     const [connect, setConnect] = useState(true)
     // 현재 날짜 가져오는 코드
@@ -31,6 +34,9 @@ const Chat = () => {
 
     const router = useRouter()
     const client = useRef<CompatClient>();
+
+    //textarea 크기
+    const textRef = useRef();
 
     const listener = (event) => {
         event.preventDefault();
@@ -52,6 +58,7 @@ const Chat = () => {
                 client.current.subscribe("/sub/chat/room/" + `${roomId.id}`, message => { //구독하는 채널
                     const datas = JSON.parse(message.body);
                     setChatMessages((chatMessages) => [...chatMessages, datas]);
+                    setOneChatMessage(datas)
                     console.log(datas)
                     setData(datas)
                 })
@@ -93,9 +100,6 @@ const Chat = () => {
         fetchData().then((r) => console.log(r));
         console.log('chatMessage:',chatMessages)
         console.log('getChatMessage:',getChatMessages)
-        return () => {
-            disConnectChannel(roomId)
-        }
 
     }, [user]);
 
@@ -115,40 +119,32 @@ const Chat = () => {
         );
     };
 
-    const disConnectChannel = async (roomId) => {
-        try {
-            // 액세스 토큰을 헤더에 담아 요청 보내기
-            const response = await sendRequest({
-                headers: {
-                    'Access-Token': localStorage.getItem('accessToken')
-                },
-                method: 'PATCH',
-                url: '/api/v1/chat-rooms/'+roomId.id,
-            });
-            // 성공적인 응답 처리
-            // console.log('채팅 데이터:', response.data);
-            setGetChatMessages(response.data)
-            router.back()
-        } catch (error) {
-            // 에러 처리
-            console.error('에러 발생:', error);
-        }
-    }
+    //textarea태그 자동 높이 조절
+    const handleResizeHeight = useCallback(() => {
+        textRef.current.style.height = textRef.current.scrollHeight + "px";
+    }, []);
+
 
     return (
         <>
-            <div>
-                    <div>
-                        {(!userId || !getChatMessages || !getChatMessages.result || getChatMessages.result.length === 0) ?
-                            (<div className={"text-xl font-semibold text-neutral-400"}>채팅글이 없습니다.</div>) :
-                            (<ChatUi firstResult={getChatMessages.result} user={user}></ChatUi>)
-                        }
+            <div className={"relative bg-white w-[790px] h-[650px]"}>
 
-                    </div>
-                    <form
-                        onSubmit={(e: any) => {
-                            e.preventDefault()
-
+                {/* 채팅 내용*/}
+                <div>
+                    {(!userId || !getChatMessages || !getChatMessages.result || getChatMessages.result.length === 0) ?
+                        (<div className={"text-xl font-semibold text-neutral-400 px-[320px] py-[150px]"}>채팅글이
+                            없습니다.</div>) :
+                        (<ChatUi firstResult={getChatMessages.result} user={user}></ChatUi>)
+                    }
+                </div>
+                {/* 내용 입력창 - footer */}
+                <form
+                    onSubmit={(e: any) => {
+                        e.preventDefault()
+                        if (e.target.client.value.length == 0) {
+                            e.preventDefault();
+                            alert("전송실패 1글자 이상 입력하셈")
+                        } else {
                             const data = {
                                 "roomId": parseInt(roomId.id),
                                 "message": e.target.client.value,
@@ -156,20 +152,51 @@ const Chat = () => {
                             }
                             // console.log(data)
                             sendHandler(JSON.stringify(data))
-                        }}
-                    >
-                        <input
-                            placeholder="메시지를 입력하세요"
-                            id="client"
-                            name="client"
+                        }
+
+                    }}
+                >
+                        <textarea className="
+                            border
+                            border-black
+                            border-1
+                            rounded
+                            p-2
+                            h-36
+                            w-[740px]
+                            absolute
+                            bottom-2
+                            left-6
+                            right-0
+                        "
+                                  ref={textRef}
+                                  id="client"
+                                  name="client"
+                                  placeholder="메시지를 입력하세요"
+                                  onInput={handleResizeHeight}
+
                         >
 
-                        </input>
-                        <button type={"submit"}>전송</button>
-                    </form>
-                    <button className="rounded-full border p-2" onClick={()=>disConnectChannel(roomId)}>채팅방 나가기</button>
-                </div>
-        </>
-    )
+                        </textarea>
+                    <button type={"submit"} className="
+                    absolute
+                    right-9
+                    bottom-4
+                    bg-neutral-200
+                    text-white
+                    font-bold
+                    p-2
+                    px-6
+                    rounded-xl
+                    hover:bg-neutral-300
+                    transition
+                    "
+                    >
+                        전송
+                    </button>
+                </form>
+        </div>
+</>
+)
 }
 export default Chat

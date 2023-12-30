@@ -67,12 +67,12 @@ const ArticleDetail = () => {
         <div>
             <div className={"h-[30px]"}/>
             <div className={"flex justify-center"}>
-                <div className={"w-[370px] h-[370px] border object-cover overflow-hidden"}>
+                <div className={"w-[700px] h-[500px] border object-cover overflow-hidden"}>
                     <div className={"flex transition -translate-x-["+ count +"00%] "}>
                     {
                         Object.entries(post.result.imageUrls).map(([index, img]) => {
                                 return (
-                                        <Image src={`${img}`} width={384} height={384} className={""}
+                                        <Image src={`${img}`} width={500} height={384} className={""}
                                                alt={index}></Image>
                                 )
                             }
@@ -84,6 +84,7 @@ const ArticleDetail = () => {
                 <button onClick={onClickSubCarousal}>-</button>
             </div>
             <Separator/>
+
             <div className={"px-72"}>
                 <LikeButton param={params.id} ></LikeButton>
                 <div>이름 : {post.result.seller.name}</div>

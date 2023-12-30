@@ -61,7 +61,6 @@ const Fleamarket = () => {
             {/*글쓰기*/}
             <div className={"relative"}>
                 <div className={"grid fixed bottom-0 right-0 m-10 gap-y-3"}>
-                    <ChattingButton></ChattingButton>
                     <WriteButton isShowing={open} onChange={() => setOpen(!open)}/>
                 </div>
             </div>

@@ -38,8 +38,17 @@ export const chattingMessage = atom({
     key: "chattingMessage",
     default: []
 })
+export const message = atom({
+    key: "message",
+    default: {}
+})
 
 export const userInfo = atom({
     key: "userInfo",
     default: {}
+})
+
+export const chatHistoryResult = atom({
+    key: "chatHistoryResult",
+    default: []
 })

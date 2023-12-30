@@ -9,9 +9,11 @@ import SearchInput from "@/components/SearchInput";
 import Button from "@/components/Button";
 import {useRecoilState} from "recoil";
 import {modalState} from "@/app/recoil/atom";
+import { IoChatbubbleOutline } from "react-icons/io5";
 import Modal from "@/components/Modal";
 import {IoSearch} from "react-icons/io5";
-
+import { IoChatbubble } from "react-icons/io5";
+import { PiChatCircleBold } from "react-icons/pi";
 interface NavigationProps {
     children: React.ReactNode;
 }
@@ -32,33 +34,15 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                 label: "중고거래",
                 href: "/fleamarket",
                 active: pathname === "/fleamarket"
-            },
-            {
-                label: "동네업체",
-                href: "/nearby-stores",
-                active: pathname === "/nearby-stores"
-            },
-            {
-                label: "알바",
-                href: "/jobs",
-                active: pathname === "/jobs"
-
-            },
-            {
-                label: "부동산 직거래",
-                href: "/realty",
-                active: pathname === "/realty"
-            },
-            {
-                label: "중고차 직거래",
-                href: "/car",
-                active: pathname === "/car"
-            },
-
+            }
         ], [pathname]
     )
     const searchOnClick = ()=> {
         router.push("/search")
+    }
+
+    const chatOnClick = ()=> {
+        router.push("/chat")
     }
 
     return (
@@ -72,9 +56,13 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                             <NavigationItem key={route.label} {...route}></NavigationItem>
                         ))}
                     </div>
-                    <div className={"flex gap-x-4 items-center"}>
+                    <div className={"flex gap-x-3 items-center"}>
+
                     <Button onClick={searchOnClick} className={"flex items-center gap-x-1"}>
                         <IoSearch size={20} />검색하기</Button>
+                        <Button onClick={chatOnClick} className={"flex items-center gap-x-2"}>
+                            <PiChatCircleBold size={18} />
+                            채팅하기</Button>
                     <LoginButton></LoginButton>
                     </div>
                 </div>

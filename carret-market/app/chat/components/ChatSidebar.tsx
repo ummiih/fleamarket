@@ -1,0 +1,99 @@
+"use client"
+import ChatProfileBox from "@/app/chat/components/ChatProfileBox";
+import Image from "next/image";
+import {useRouter} from "next/navigation";
+import React, {useEffect, useState} from "react";
+import {sendRequest} from "@/hooks/funcs";
+import {useRecoilState} from "recoil";
+import {chatHistoryResult, userInfo} from "@/app/recoil/atom";
+
+import ArticleContent from "@/components/ArticleContent";
+import Article from "@/components/Article";
+
+const ChatSidebar = () => {
+    const router = useRouter()
+    const [chatHistories, setChatHistories] = useRecoilState(chatHistoryResult)
+    const [user, setUser] = useRecoilState(userInfo)
+
+    const getChatData = async () => {
+        try {
+            // 액세스 토큰을 헤더에 담아 요청 보내기
+            const response = await sendRequest({
+                headers: {
+                    'Access-Token': localStorage.getItem('accessToken')
+                },
+                method: 'GET',
+                url: '/api/v1/chat-rooms',
+            });
+            setChatHistories(response.data.result)
+            // 성공적인 응답 처리
+            console.log('데이터:', response.data.result);
+        } catch (error) {
+            // 에러 처리
+            console.error('에러 발생:', error);
+        }
+    };
+
+    useEffect(() => {
+        getChatData().then(r => console.log(r));
+    }, []);
+
+    const profileOnClick = () => {
+        router.push('/chat')
+    }
+
+    return (
+        <div className="
+            w-[400px]
+            h-[650px]
+            border
+            boder-x-[1px]
+            bg-white
+            flex
+            overflow-y-scroll
+        "
+        >
+            <div className="
+            w-[70px]
+            h-[60px]
+            bg-neutral-200
+            p-2
+            cursor-pointer
+            "
+                 onClick={() => profileOnClick()}
+            >
+                <div className="relative w-[50px] h-[50px] rounded-full border border-[#FE6F0F] border-2 justify-center items-center">
+                    <div className="absolute right-1 border border-neutral-200 border-1 bg-[#FE6F0F] w-2 h-2 rounded-full"></div>
+                    <Image width={45} height={45} src={"/profile_default.png"} className={"rounded-full"}/>
+                </div>
+
+            </div>
+            <div>
+                {
+                    Object.keys(user).length > 0 ? (<div className="
+                    border-b-[1px]
+                    border-l-[1px]
+                    w-[330px]
+                    h-[60px]
+                    p-5
+                    font-semibold
+                    "
+                    >
+                        {user.name}
+                    </div>):(null)
+                }
+
+                <div>
+                {(!chatHistories || !chatHistories.length === 0) ?
+                    (<div></div>)
+                    : <div>{
+                        Object.entries(chatHistories).map(([index, chatHistory]) => (
+                            <ChatProfileBox chatHistory={chatHistory}/>
+                        ))}
+                </div>}
+                </div>
+            </div>
+        </div>
+    )
+}
+export default ChatSidebar;

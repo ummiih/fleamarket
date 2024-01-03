@@ -9,6 +9,7 @@ import {useState} from "react";
 import {useRecoilState} from "recoil";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
+import DotBadge from "@/components/DotBadge";
 
 interface ChattingButtonProps {
     parameter: any;
@@ -44,9 +45,11 @@ const ChattingButton:React.FC<ChattingButtonProps> = ({parameter}) => {
     }
 
     return(
-        <button className={"bg-[#FE6F0F] p-5 rounded-full hover:scale-110 transition"} onClick={onClick}>
-            <IoChatbubble size={30} className={"text-white"}/>
-        </button>
+        <div className="fixed right-5 bottom-5 hover:scale-110 transition">
+            <button className={"bg-[#FE6F0F] p-5 rounded-full"} onClick={onClick}>
+                <IoChatbubble size={30} className={"text-white"}/>
+            </button>
+        </div>
     )
 }
 

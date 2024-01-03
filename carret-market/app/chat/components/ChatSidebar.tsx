@@ -9,6 +9,7 @@ import {chatHistoryResult, userInfo} from "@/app/recoil/atom";
 
 import ArticleContent from "@/components/ArticleContent";
 import Article from "@/components/Article";
+import DotBadge from "@/components/DotBadge";
 
 const ChatSidebar = () => {
     const router = useRouter()
@@ -59,11 +60,12 @@ const ChatSidebar = () => {
             bg-neutral-200
             p-2
             cursor-pointer
+            relative
             "
                  onClick={() => profileOnClick()}
             >
-                <div className="relative w-[50px] h-[50px] rounded-full border border-[#FE6F0F] border-2 justify-center items-center">
-                    <div className="absolute right-1 border border-neutral-200 border-1 bg-[#FE6F0F] w-2 h-2 rounded-full"></div>
+                <DotBadge />
+                <div className="w-[50px] h-[50px] rounded-full border border-[#FE6F0F] border-2 justify-center items-center">
                     <Image width={45} height={45} src={"/profile_default.png"} className={"rounded-full"}/>
                 </div>
 

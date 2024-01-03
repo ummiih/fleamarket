@@ -54,9 +54,6 @@ const ArticleDetail = () => {
 
     }, [params.id, setPost]);
 
-    // useEffect(() => {
-    //     // console.log(count)
-    // }, [count]);
 
     // post가 아직 업데이트되지 않았다면 로딩 상태 또는 데이터 존재 여부 확인
     if (!post || !post.result || Object.keys(post.result).length === 0) {
@@ -64,7 +61,7 @@ const ArticleDetail = () => {
     }
 
     return (
-        <div>
+        <div className={"relative"}>
             <div className={"h-[30px]"}/>
             <div className={"flex justify-center"}>
                 <div className={"w-[700px] h-[500px] border object-cover overflow-hidden"}>
@@ -83,19 +80,54 @@ const ArticleDetail = () => {
                 <button onClick={onClickPlusCarousal}>+</button>
                 <button onClick={onClickSubCarousal}>-</button>
             </div>
-            <Separator/>
 
             <div className={"px-72"}>
-                <LikeButton param={params.id} ></LikeButton>
-                <div>이름 : {post.result.seller.name}</div>
-                <div>주소 : {post.result.seller.address}</div>
-                <div>온도: {post.result.seller.temperature}</div>
+                {/* 프로필 코드 */}
+                <div className="py-6 flex justify-between items-center border-b">
+                    <div className="flex gap-x-2 items-center">
+                        <div>
+                            <Image
+                                src={"/profile_default.png"}
+                                width={40}
+                                height={40}
+                            className="rounded-full"></Image>
+                        </div>
+                        <div>
+                            <div className="font-semibold">{post.result.seller.name}</div>
+                            <div className="text-[12px] text-neutral-700">{post.result.seller.address}</div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                        {/* 사용자 온도 나타내는 컴포넌트 => TODO: 컴포넌트 쓰일 일 있으면 컴포넌트로 빼기 */}
+                        <div className="grid gap-y-1 float-right">
+                            <div className="font-semibold text-[#DE5D07]">{post.result.seller.temperature} °C</div>
+                            <div className="w-24 h-1 bg-neutral-200 rounded-full">
+                                <div className="w-12 h-1 bg-[#DE5D07] rounded-full"></div>
+                            </div>
+                        </div>
+                        <LikeButton param={params.id} ></LikeButton>
+                    </div>
+                </div>
+                {/* 본문 */}
+                <div className="py-6 flex flex-col gap-y-2 border-b">
+                    <div className={"flex flex-col gap-y-1"}>
+                        <div className="text-xl font-semibold">{post.result.title}</div>
+                        <div className="text-[12px] text-neutral-400 flex">
+                            <span>가구/인테리어 ∙ <span> 1일전</span></span>
+                        </div>
+                    </div>
 
-                <div>제목: {post.result.title}</div>
-                <div>내용: {post.result.content}</div>
-                <div>가격: {post.result.price} </div>
-                <div>관심: {post.result.likeCount}</div>
-                <div>조회수: {post.result.views}</div>
+                    <div className="font-bold">{post.result.price}원</div>
+
+                    <div className="my-4 text-xl font-light">{post.result.content}</div>
+
+                    <div className="text-[13px] text-neutral-400 flex">
+                        <span>관심 {post.result.likeCount} ∙<span> 조회수 {post.result.views}</span>
+                        </span>
+                    </div>
+                </div>
+
+
             </div>
             <ChattingButton parameter={params}></ChattingButton>
         </div>

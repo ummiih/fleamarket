@@ -37,7 +37,7 @@ const LikeButton:React.FC<LikeButtonProps> = ({param}) => {
             }
             }>
                 <div className={"cursor-pointer hover:opacity-40 transition"}>
-                    <IoIosHeartEmpty size={30}/>
+                    <IoIosHeartEmpty size={30} className={"text-[#FE6F0F]"}/>
                 </div>
             </form>
         </div>

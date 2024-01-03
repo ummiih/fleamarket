@@ -14,6 +14,7 @@ import Modal from "@/components/Modal";
 import {IoSearch} from "react-icons/io5";
 import { IoChatbubble } from "react-icons/io5";
 import { PiChatCircleBold } from "react-icons/pi";
+import LogoutButton from "@/components/LogoutButton";
 interface NavigationProps {
     children: React.ReactNode;
 }
@@ -22,6 +23,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
     const pathname = usePathname();
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
+    const userId = localStorage.getItem("userId")
 
     const routes = useMemo(
         () => [
@@ -63,7 +65,9 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                         <Button onClick={chatOnClick} className={"flex items-center gap-x-2"}>
                             <PiChatCircleBold size={18} />
                             채팅하기</Button>
-                    <LoginButton></LoginButton>
+                        {
+                            userId ? <LogoutButton /> : <LoginButton />
+                        }
                     </div>
                 </div>
             </div>

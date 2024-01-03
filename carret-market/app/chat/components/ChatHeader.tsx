@@ -3,9 +3,6 @@ import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import {sendRequest} from "@/hooks/funcs";
 import {useParams, useRouter} from "next/navigation";
-import {useRecoilState} from "recoil";
-import {chatHistoryResult} from "@/app/recoil/atom";
-import Article from "@/components/Article";
 
 const ChatHeader = () => {
     const router = useRouter()

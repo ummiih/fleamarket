@@ -1,24 +1,30 @@
 "use client"
 import Image from "next/image";
 import { useParams } from 'next/navigation';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useRecoilState} from "recoil";
 
 
-import {oneFleaMarketData} from "@/app/recoil/atom";
+import {modalState, oneFleaMarketData} from "@/app/recoil/atom";
 import {sendRequest} from "@/hooks/funcs";
 
 import {Separator} from "@/components/ui/separator";
 
 import LikeButton from "@/components/LikeButton";
 import ChattingButton from "@/components/ChattingButton";
+import EditButton from "@/components/EditButton";
+import Modal from "@/components/Modal";
+import EditModal from "@/components/EditModal";
 
 const ArticleDetail = () => {
     const params = useParams();
     const [post, setPost] = useRecoilState(oneFleaMarketData)
     let [count, setCount] = useState(0)
+    //모달창 열렸는지 확인하는 state
+    const [open, setOpen] = useState(false);
+    const userName = localStorage.getItem("userName")
 
-    console.log(typeof params.id)
+    console.log("유저 이름",userName)
     const fetchData = async () => {
         try {
             // 액세스 토큰을 헤더에 담아 요청 보내기
@@ -32,6 +38,25 @@ const ArticleDetail = () => {
             setPost(response.data)
             // 성공적인 응답 처리
             console.log('데이터:', post);
+        } catch (error) {
+            // 에러 처리
+            console.error('에러 발생:', error);
+        }
+    };
+
+    const DeleteData = async () => {
+        try {
+            // 액세스 토큰을 헤더에 담아 요청 보내기
+            const response = await sendRequest({
+                headers: {
+                    'Access-Token': localStorage.getItem('accessToken')
+                },
+                method: 'DELETE',
+                url: '/api/v1/trade-posts/'+params.id,
+            });
+            setPost(response.data)
+            // 성공적인 응답 처리
+            console.log('삭제할 데이터:', post);
         } catch (error) {
             // 에러 처리
             console.error('에러 발생:', error);
@@ -62,6 +87,7 @@ const ArticleDetail = () => {
 
     return (
         <div className={"relative"}>
+            {open ? ( <EditModal isShowing={open} parameter={params.id} />) : <div></div>}
             <div className={"h-[30px]"}/>
             <div className={"flex justify-center"}>
                 <div className={"w-[700px] h-[500px] border object-cover overflow-hidden"}>
@@ -90,7 +116,7 @@ const ArticleDetail = () => {
                                 src={"/profile_default.png"}
                                 width={40}
                                 height={40}
-                            className="rounded-full"></Image>
+                                className="rounded-full"></Image>
                         </div>
                         <div>
                             <div className="font-semibold">{post.result.seller.name}</div>
@@ -105,7 +131,7 @@ const ArticleDetail = () => {
                                 <div className="w-12 h-1 bg-[#DE5D07] rounded-full"></div>
                             </div>
                         </div>
-                        <LikeButton param={params.id} ></LikeButton>
+                        <LikeButton param={params.id}></LikeButton>
                     </div>
                 </div>
                 {/* 본문 */}
@@ -126,8 +152,18 @@ const ArticleDetail = () => {
                         </span>
                     </div>
                 </div>
-
-
+                {
+                    userName == post.result.seller.name
+                        ? <div className={"flex justify-center gap-x-2"}>
+                            <EditButton onChange={() => setOpen(!open)}>
+                                수정
+                            </EditButton>
+                            <EditButton onChange={DeleteData}>
+                                삭제
+                            </EditButton>
+                          </div>
+                        : (null)
+                }
             </div>
             <ChattingButton parameter={params}></ChattingButton>
         </div>

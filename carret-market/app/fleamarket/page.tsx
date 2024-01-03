@@ -16,8 +16,6 @@ import ChattingButton from "@/components/ChattingButton";
 const Fleamarket = () => {
     const [posts, setPosts] = useState( { "content": [] })
     const [open, setOpen] = useRecoilState(modalState)
-    const router = useRouter();
-    let test;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,7 +29,6 @@ const Fleamarket = () => {
                     url: '/api/v1/trade-posts',
                 });
                 setPosts(response.data.result)
-                test = response
                 // 성공적인 응답 처리
                 console.log('데이터:', response.data);
             } catch (error) {

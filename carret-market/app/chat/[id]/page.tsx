@@ -1,18 +1,15 @@
 "use client"
+
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import getChattingData from "@/actions/getChattingData";
 import {useParams} from "next/navigation";
 import { useRouter } from 'next/navigation'
 import SockJS from "sockjs-client";
-import {Client, CompatClient, Stomp} from "@stomp/stompjs";
+import {CompatClient, Stomp} from "@stomp/stompjs";
 import {useRecoilState} from "recoil";
-import {chattingMessage, userInfo, message, chatHistoryResult} from "@/app/recoil/atom";
+import {chattingMessage, userInfo, message} from "@/app/recoil/atom";
 import {sendRequest} from "@/hooks/funcs";
-import Article from "@/components/Article";
 import ChatUi from "@/app/chat/components/ChatUi";
-import {Noticia_Text} from "next/dist/compiled/@next/font/dist/google";
-import Image from "next/image";
-import ChatHeader from "@/app/chat/components/ChatHeader";
+
 
 const Chat = () => {
     const roomId = useParams();

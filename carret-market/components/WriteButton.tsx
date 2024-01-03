@@ -1,8 +1,6 @@
 "use client"
 
-import {useState} from "react";
 import { FaPen } from "react-icons/fa";
-import useModal from "@/hooks/useModal";
 
 interface WriteButtonProps {
     isShowing: boolean;

@@ -34,7 +34,8 @@ const Home = () => {
       // 성공적인 응답 처리
       setUser(response.data.result)
       localStorage.setItem("userId",response.data.result.userId)
-      console.log('데이터:', localStorage.getItem("userId"));
+      localStorage.setItem("userName",response.data.result.name)
+      console.log('데이터:', localStorage.getItem("userName"));
     } catch (error) {
       // 에러 처리
       console.error('에러 발생:', error);

@@ -24,9 +24,15 @@ export const lng = atom({
     default: ""
 })
 
-//글쓰기 모달창
+//글쓰기 모달창 삭제 버튼에 사용하는 state
 export const modalState = atom({
     key: "modalState",
+    default: false
+})
+
+//글수정 모달창 삭제 버튼에 사용하는 state
+export const editModalState = atom({
+    key: "editModalState",
     default: false
 })
 
@@ -48,6 +54,7 @@ export const userInfo = atom({
     default: {}
 })
 
+// 전체 채팅 데이터를 저장
 export const chatHistoryResult = atom({
     key: "chatHistoryResult",
     default: []

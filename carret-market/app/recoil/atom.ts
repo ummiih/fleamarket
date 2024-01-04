@@ -11,6 +11,16 @@ export const oneFleaMarketData = atom({
     default: {"result":{"seller":{},"imageUrls":[]}}
 })
 
+export const previewImageFiles = atom({
+    key: "previewImageFiles",
+    default: []
+})
+
+export const formFiles = atom({
+    key: "formFiles",
+    default: []
+})
+
 export const userAddress = atom({
     key: "userAddress",
     default: ""
@@ -57,5 +67,17 @@ export const userInfo = atom({
 // 전체 채팅 데이터를 저장
 export const chatHistoryResult = atom({
     key: "chatHistoryResult",
+    default: []
+})
+
+// 게시글의 이미지 URL을 가져오는 state
+export const articleUrls = atom({
+    key: "articleUrls",
+    default: []
+})
+
+// 게시글의 삭제할 이미지 URL을 담는 state
+export const deleteUrls = atom({
+    key: "deleteUrls",
     default: []
 })

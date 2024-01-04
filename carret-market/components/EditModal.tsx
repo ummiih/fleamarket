@@ -9,7 +9,8 @@ import {sendRequest} from "@/hooks/funcs";
 import {IoClose} from "react-icons/io5";
 import {FiPlus} from "react-icons/fi";
 import {useRecoilState} from "recoil";
-import {editModalState, modalState} from "@/app/recoil/atom";
+import {articleUrls, deleteUrls, editModalState, formFiles, modalState, previewImageFiles} from "@/app/recoil/atom";
+import DeleteButton from "@/components/DeleteButton";
 
 
 interface EditModalProps {
@@ -20,9 +21,14 @@ interface EditModalProps {
 
 
 const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
-    const [imgFiles, setImgFiles] = useState<string[]>([]);
     const imgRef = useRef<HTMLInputElement>(null);
-    const [fileList, setFileList] = useState<File[]>([]);
+    //미리보기 => 과거 ULR말고, 업로드된 imageURL만 담는 state
+    const [imgFiles, setImgFiles] = useRecoilState<string[]>(previewImageFiles);
+    //formdata에 넣을 fileList, 과거거 X imgFiles랑 세트임
+    const [fileList, setFileList] = useRecoilState<File[]>(formFiles);
+    //fetchData에서 과거 imageURL만 담는 state
+    const [imageUrls, setImageUrls] = useRecoilState<[]>(articleUrls)
+
     const textRef = useRef();
     const [open, setOpen] = useRecoilState(editModalState)
     //getEditData()로 가져온 데이터를 담는 state
@@ -33,6 +39,9 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
                 ""
             ],}}
         )
+    //삭제할 이미지를 모아둔 state
+    const [deleteImageUrls, setDeleteImageUrls] = useRecoilState(deleteUrls)
+
 
     //textarea태그 자동 높이 조절
     const handleResizeHeight = useCallback(() => {
@@ -42,23 +51,19 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
     //이미지 업로드 input의 onChange
     const saveImgFile = async () => {
         const files = imgRef.current.files
-        const copyImgFile = [...imgFiles]
-        const copyFileList = [...fileList]
 
         // 이미지 미리 보기 코드
         for (let i = 0; i < files.length; i++) {
             let reader = new FileReader();
             reader.readAsDataURL(files[i])
             reader.onloadend = () => {
-                copyImgFile.push(reader.result)
-                setImgFiles(copyImgFile)
+                setImgFiles((imgFiles) => [...imgFiles, reader.result]);
             }
         }
 
         // 이미지 업로드 코드
         for (let i = 0; i < files.length; i++) {
-            copyFileList.push(files[i])
-            setFileList(copyFileList)
+            setFileList((fileList) => [...fileList, files[i]]);
         }
     }
 
@@ -72,10 +77,10 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
                 method: 'GET',
                 url: '/api/v1/trade-posts/'+ parameter,
             });
-
             setPosts(response.data.result)
+            setImageUrls(response.data.result.imageUrls)
             // 성공적인 응답 처리
-            console.log('상세 페이지 데이터:', response.data.result);
+            console.log('상세 페이지 데이터:', response.data.result.imageUrls);
 
         } catch (error) {
             // 에러 처리
@@ -87,6 +92,12 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
     useEffect(() => {
         getData()
     }, []);
+
+
+    useEffect(() => {
+        console.log(imageUrls)
+    }, [imageUrls]);
+
 
     const putEditData = async (formData) => {
         try {
@@ -102,7 +113,6 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
 
             // 성공적인 응답 처리
             console.log('데이터:', response.data);
-            alert("성공")
 
         } catch (error) {
             // 에러 처리
@@ -110,7 +120,6 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
             alert("오류")
         }
     };
-
 
     return (
         <>
@@ -132,18 +141,24 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
                                     (<div>
                                         <form
                                         onSubmit={(e: any) => {
+
                                             e.preventDefault()
                                             console.log("title", e.target.title.value)
                                             console.log("content", e.target.content.value)
                                             console.log("price", e.target.price.value)
+                                            console.log("deleteImageUrls",deleteUrls)
 
                                             {/*json 형식으로 title, content, price 전달*/
                                             }
+                                            //formData
                                             const formData = new FormData();
+
+
                                             const json = {
                                                 title: e.target.title.value,
                                                 content: e.target.content.value,
-                                                price: parseInt(e.target.price.value)
+                                                price: parseInt(e.target.price.value),
+                                                removeImageUrlList: deleteImageUrls
                                             }
                                             formData.append('request', new Blob([JSON.stringify(json)], {
                                                 type: "application/json"
@@ -203,14 +218,24 @@ const EditModal: React.FC<ModalProps> = ({isShowing, parameter}) => {
                                                                 className={"text-white p-2 w-[40px] h-[40px] bg-black rounded-full cursor-pointer mr-2 hover:scale-105 transition hover:opacity-70"}/></label>
 
                                                     <div
-                                                        className={"flex gap-x-2 rounded-2xl items-center overflow-x-scroll"}>
+                                                        className={"relative flex gap-x-2 items-center overflow-x-scroll"}>
+                                                        {/* 과거 API에서 받은 사진 URL */}
                                                         {
-                                                            posts.imageUrls.map((img, i) => <img key={i} src={img} alt={img}
-                                                                                                 className={"w-[80px] h-[80px]"}></img>)
+                                                            imageUrls.map((img, i) =>
+                                                                <div>
+                                                                    <DeleteButton i={i} type={'imageUrls'}/>
+                                                                    <img key={i} src={img} alt={img}
+                                                                         className={"w-[80px] h-[80px]"}></img>
+                                                                </div>)
                                                         }
+                                                        {/* 현재 업로드해서 미리보기 사진 URL */}
                                                         {
-                                                            imgFiles.map((img, i) => <img key={i} src={img} alt={img}
-                                                                                          className={"w-[80px] h-[80px]"}></img>)
+                                                            imgFiles.map((img, i) =>
+                                                                <div>
+                                                                    <DeleteButton i={i} type={'imgFiles'}/>
+                                                                    <img key={i} src={img} alt={img}
+                                                                         className={"w-[80px] h-[80px]"}></img>
+                                                                </div>)
                                                         }
                                                     </div>
                                                 </div>

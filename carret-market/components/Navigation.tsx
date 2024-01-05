@@ -65,9 +65,10 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                         <Button onClick={chatOnClick} className={"flex items-center gap-x-2"}>
                             <PiChatCircleBold size={18} />
                             채팅하기</Button>
-                        {
-                            userId ? <LogoutButton /> : <LoginButton />
-                        }
+                        <LoginButton />
+                        {/*{*/}
+                        {/*    userId ? <LogoutButton /> : <LoginButton />*/}
+                        {/*}*/}
                     </div>
                 </div>
             </div>

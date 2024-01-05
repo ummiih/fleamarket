@@ -131,7 +131,7 @@ const ArticleDetail = () => {
                                 <div className="w-12 h-1 bg-[#DE5D07] rounded-full"></div>
                             </div>
                         </div>
-                        <LikeButton param={params.id}></LikeButton>
+                        <LikeButton param={params.id} author={post.result.seller.userId}></LikeButton>
                     </div>
                 </div>
                 {/* 본문 */}

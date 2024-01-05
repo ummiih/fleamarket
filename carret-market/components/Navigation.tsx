@@ -1,20 +1,17 @@
 "use client"
 
 import {usePathname, useRouter} from "next/navigation";
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import NavigationItem from "@/components/NavigationItem";
-import Image from "next/image";
 import LoginButton from "@/components/LoginButton";
-import SearchInput from "@/components/SearchInput";
 import Button from "@/components/Button";
 import {useRecoilState} from "recoil";
 import {modalState} from "@/app/recoil/atom";
-import { IoChatbubbleOutline } from "react-icons/io5";
 import Modal from "@/components/Modal";
 import {IoSearch} from "react-icons/io5";
-import { IoChatbubble } from "react-icons/io5";
 import { PiChatCircleBold } from "react-icons/pi";
-import LogoutButton from "@/components/LogoutButton";
+import MyPageButton from "@/components/MyPageButton";
+import ProfileModal from "@/components/ProfileModal";
 interface NavigationProps {
     children: React.ReactNode;
 }
@@ -23,6 +20,7 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
     const pathname = usePathname();
     const router = useRouter()
     const [open, setOpen] = useRecoilState(modalState)
+    const [openProfileModal, setOpenProfileModal] = useState(false);
     const userId = localStorage.getItem("userId")
 
     const routes = useMemo(
@@ -66,12 +64,13 @@ const Navigation: React.FC<NavigationProps> = ({children}) => {
                             <PiChatCircleBold size={18} />
                             채팅하기</Button>
                         <LoginButton />
-                        {/*{*/}
-                        {/*    userId ? <LogoutButton /> : <LoginButton />*/}
-                        {/*}*/}
+                        {
+                            userId ? <MyPageButton onClick={() => setOpenProfileModal(!openProfileModal)} /> : <LoginButton />
+                        }
                     </div>
                 </div>
             </div>
+            { openProfileModal && (<ProfileModal />) }
             <main className="">{children}</main>
         </div>
     )

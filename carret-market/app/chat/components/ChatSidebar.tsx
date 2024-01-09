@@ -15,6 +15,28 @@ const ChatSidebar = () => {
     const router = useRouter()
     const [chatHistories, setChatHistories] = useRecoilState(chatHistoryResult)
     const [user, setUser] = useRecoilState(userInfo)
+    //안읽은 전체 수
+    const [unReadCount, setUnReadCount] = useState<number>(0);
+
+    const unReadData = async () => {
+        try {
+            // 액세스 토큰을 헤더에 담아 요청 보내기
+            const response = await sendRequest({
+                headers: {
+                    'Access-Token': localStorage.getItem('accessToken')
+                },
+                method: 'GET',
+                url: '/api/v1/chat-rooms/unread',
+            });
+            // 성공적인 응답 처리
+            setUnReadCount(response.data)
+
+            console.log('안읽은 수', response.data);
+        } catch (error) {
+            // 에러 처리
+            console.error('에러 발생:', error);
+        }
+    };
 
     const getChatData = async () => {
         try {
@@ -37,6 +59,7 @@ const ChatSidebar = () => {
 
     useEffect(() => {
         getChatData().then(r => console.log(r));
+        unReadData()
     }, []);
 
     const profileOnClick = () => {
@@ -64,7 +87,7 @@ const ChatSidebar = () => {
             "
                  onClick={() => profileOnClick()}
             >
-                <DotBadge />
+                <DotBadge count={unReadCount.result} className={"right-2 top-2 w-4 h-4 text-[8px] text-center p-[2px]"}/>
                 <div className="w-[50px] h-[50px] rounded-full border border-[#FE6F0F] border-2 justify-center items-center">
                     <Image width={45} height={45} src={"/profile_default.png"} className={"rounded-full"}/>
                 </div>

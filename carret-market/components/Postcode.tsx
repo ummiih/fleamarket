@@ -53,7 +53,7 @@ const Postcode = () => {
 
 
     return (
-            <button type='button' onClick={handleClick}>
+            <button type='button' onClick={handleClick} className="border p-2 rounded-full">
                 주소 찾기
             </button>
     );

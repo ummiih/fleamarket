@@ -9,6 +9,7 @@ import {sendRequest} from "@/hooks/funcs";
 import {useRecoilState} from "recoil";
 import {lat, lng, userAddress, userInfo} from "@/app/recoil/atom";
 import AddressMap from "@/components/AddressMap";
+import Slider from "@/components/Slider";
 
 
 
@@ -81,7 +82,9 @@ const SignUp = () => {
 
     return(
         <div>
-            <Postcode></Postcode>
+
+            <Postcode />
+            <Slider />
             <form
                 onSubmit={(e)=>{
                     e.preventDefault()

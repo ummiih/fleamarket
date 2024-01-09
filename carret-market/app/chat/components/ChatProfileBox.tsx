@@ -4,6 +4,7 @@ import {sendRequest} from "@/hooks/funcs";
 import {useEffect} from "react";
 import {useRecoilState} from "recoil";
 import {chattingMessage, message} from "@/app/recoil/atom";
+import DotBadge from "@/components/DotBadge";
 
 interface ChatProfileBox {
     chatHistory: {},
@@ -26,7 +27,7 @@ const ChatProfileBox:React.FC<ChatProfileBox> = ({chatHistory}) => {
         w-[330px]
         p-4
         flex
-
+        relative
         hover:bg-neutral-200/60
         transition
         cursor-pointer
@@ -34,7 +35,7 @@ const ChatProfileBox:React.FC<ChatProfileBox> = ({chatHistory}) => {
         "
              onClick={() => onClick()}
         >
-            <div className={"flex items-center gap-x-2"}>
+            <div className={" flex items-center gap-x-2"}>
                 <Image alt={"나의 프로필"} src={"/profile_default.png"} width={40} height={40}
                        className={"rounded-full border "}></Image>
                 <div className={"overflow-hidden"}>
@@ -48,6 +49,7 @@ const ChatProfileBox:React.FC<ChatProfileBox> = ({chatHistory}) => {
                     <div className={"text-[13px] truncate text-neutral-800"}>{chatHistory.lastChatHistory.message}
                     </div>
                 </div>
+                <DotBadge count={chatHistory.lastChatHistory.unreadCount}/>
             </div>
 
             {/*<Image src={"/IMG_9021.jpg"} width={40} height={40} className={"rounded-xl"}/>*/}

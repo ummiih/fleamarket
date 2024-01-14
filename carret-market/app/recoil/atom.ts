@@ -81,3 +81,9 @@ export const deleteUrls = atom({
     key: "deleteUrls",
     default: []
 })
+
+//거래중 거래완료 필터 확인하는 state
+export const isTradingState = atom({
+    key: "isTradingState",
+    default: true
+})

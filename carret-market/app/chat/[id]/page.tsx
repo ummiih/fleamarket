@@ -48,6 +48,7 @@ const Chat = () => {
             const sock = new SockJS("http://112.186.245.109:8080/ws-market")
             return sock;
         });
+
         client.current.connect(
             { token : token, 'roomId' : roomId.id },
             () => {
@@ -68,9 +69,6 @@ const Chat = () => {
             console.log(`Additional details:${frame.body}`);
         };
     }
-
-
-    console.log(roomId.id)
 
     //채팅 데이터 전체 가져오기
     const fetchData = async () => {
